@@ -1,1 +1,1 @@
-# Microfrontend Strategies
+# Micro frontend Strategies
