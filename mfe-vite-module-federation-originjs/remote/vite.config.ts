@@ -9,8 +9,12 @@ export default defineConfig({
     federation({
       name: "remote_app",
       filename: "remoteEntry.js",
-      exposes: { "./Button": "./src/components/Button" },
-      shared: ["react", "react-dom"],
+      exposes: {
+        "./Button": "./src/components/Button",
+        "./store": "./src/store",
+      },
+
+      shared: ["react", "react-dom", "jotai"],
     }),
   ],
   build: {
