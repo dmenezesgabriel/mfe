@@ -16,6 +16,10 @@ cd remote
 ```
 
 ```sh
+pnpm add jotai
+```
+
+```sh
 pnpm add @originjs/vite-plugin-federation -D
 ```
 
@@ -68,10 +72,11 @@ Create a component to be shared
 
 ```jsx
 // mfe-vite-module-federation-originjs/remote/src/components/Button.tsx
-import { useState } from "react";
+import "./Button.css";
+import { useCount } from "../store";
 
 export function Button() {
-  const [state, setState] = useState(0);
+  const [state, setState] = useCount();
 
   return (
     <div>
@@ -86,15 +91,30 @@ export function Button() {
 }
 ```
 
+```css
+/* mfe-vite-module-federation-originjs/remote/src/components/Button.css */
+.shared-btn {
+  background: #000;
+  color: #fff;
+  border: 1px solid #000;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+```
+
 Add to main component
 
 ```jsx
 // mfe-vite-module-federation-originjs/remote/src/App.tsx
-import { useState } from "react";
 import { Button } from "./components/Button";
+import { useCount } from "./store";
 
 export function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useCount();
 
   return (
     <div>
@@ -108,8 +128,17 @@ export function App() {
     </div>
   );
 }
+```
 
-export default App;
+Create a store to share state between the host and remote
+
+```ts
+// mfe-vite-module-federation-originjs/remote/src/store.ts
+import { atom, useAtom } from "jotai";
+
+const countAtom = atom(0);
+
+export const useCount = () => useAtom(countAtom);
 ```
 
 Update vite config
@@ -127,8 +156,12 @@ export default defineConfig({
     federation({
       name: "remote_app",
       filename: "remoteEntry.js",
-      exposes: { "./Button": "./src/components/Button" },
-      shared: ["react", "react-dom"],
+      exposes: {
+        "./Button": "./src/components/Button",
+        "./store": "./src/store",
+      },
+
+      shared: ["react", "react-dom", "jotai"],
     }),
   ],
   build: {
@@ -189,12 +222,11 @@ Modify the host App component
 
 ```jsx
 // mfe-vite-module-federation-originjs/host/src/App.tsx
-import { useState } from "react";
-
 import { Button } from "remoteApp/Button";
+import { useCount } from "remoteApp/store";
 
 export function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useCount();
 
   return (
     <div>
@@ -208,8 +240,6 @@ export function App() {
     </div>
   );
 }
-
-export default App;
 ```
 
 declare remoteApp components
@@ -220,6 +250,15 @@ declare module "remoteApp/Button" {
   import { ComponentType, type ButtonHTMLAttributes } from "react";
 
   export const Button: ComponentType<ButtonHTMLAttributes<HTMLButtonElement>>;
+}
+
+declare module "remoteApp/store" {
+  import { PrimitiveAtom } from "jotai";
+  export const countAtom: PrimitiveAtom<number>;
+  export const useCount: () => [
+    number,
+    (update: number | ((prev: number) => number)) => void
+  ];
 }
 ```
 

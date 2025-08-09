@@ -1,9 +1,8 @@
-import { useState } from "react";
-
 import { Button } from "remoteApp/Button";
+import { useCount } from "remoteApp/store";
 
 export function App() {
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useCount();
 
   return (
     <div>
@@ -17,5 +16,3 @@ export function App() {
     </div>
   );
 }
-
-export default App;
