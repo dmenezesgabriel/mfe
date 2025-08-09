@@ -22,7 +22,7 @@ pnpm add @originjs/vite-plugin-federation -D
 Update package.json scripts to fix the port
 
 ```json
-// mfe-vite-module-federation/remote/package.json
+// mfe-vite-module-federation-originjs/remote/package.json
   "scripts": {
     "dev": "vite --port 5001 --strictPort",
     "build": "tsc -b && vite build",
@@ -52,7 +52,7 @@ pnpm add @originjs/vite-plugin-federation -D
 Update package.json scripts to fix the port
 
 ```json
-// mfe-vite-module-federation/host/package.json
+// mfe-vite-module-federation-originjs/host/package.json
   "scripts": {
     "dev": "vite --port 5001 --strictPort",
     "build": "tsc -b && vite build",
@@ -67,7 +67,7 @@ Update package.json scripts to fix the port
 Create a component to be shared
 
 ```jsx
-// mfe-vite-module-federation/remote/src/components/Button.tsx
+// mfe-vite-module-federation-originjs/remote/src/components/Button.tsx
 import { useState } from "react";
 
 export function Button() {
@@ -89,7 +89,7 @@ export function Button() {
 Add to main component
 
 ```jsx
-// mfe-vite-module-federation/remote/src/App.tsx
+// mfe-vite-module-federation-originjs/remote/src/App.tsx
 import { useState } from "react";
 import { Button } from "./components/Button";
 
@@ -115,7 +115,7 @@ export default App;
 Update vite config
 
 ```ts
-// mfe-vite-module-federation/remote/vite.config.ts
+// mfe-vite-module-federation-originjs/remote/vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import federation from "@originjs/vite-plugin-federation";
@@ -159,7 +159,7 @@ cd host
 Update host vite config
 
 ```ts
-// mfe-vite-module-federation/host/vite.config.ts
+// mfe-vite-module-federation-originjs/host/vite.config.ts
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import federation from "@originjs/vite-plugin-federation";
@@ -188,7 +188,7 @@ export default defineConfig({
 Modify the host App component
 
 ```jsx
-// mfe-vite-module-federation/host/src/App.tsx
+// mfe-vite-module-federation-originjs/host/src/App.tsx
 import { useState } from "react";
 
 import { Button } from "remoteApp/Button";
@@ -215,7 +215,7 @@ export default App;
 declare remoteApp components
 
 ```ts
-// mfe-vite-module-federation/host/src/@types/remoteApp.d.ts
+// mfe-vite-module-federation-originjs/host/src/@types/remoteApp.d.ts
 declare module "remoteApp/Button" {
   import { ComponentType, type ButtonHTMLAttributes } from "react";
 
@@ -226,7 +226,7 @@ declare module "remoteApp/Button" {
 Update tsconfig.app
 
 ```json
-// mfe-vite-module-federation/host/tsconfig.app.json
+// mfe-vite-module-federation-originjs/host/tsconfig.app.json
   "include": [
     "src",
     "src/**/*.d.ts"
