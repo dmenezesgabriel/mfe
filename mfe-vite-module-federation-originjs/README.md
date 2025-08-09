@@ -277,3 +277,7 @@ Run the host application
 ```sh
 pnpm build && pnpm preview
 ```
+
+## Reference
+
+- [Vite and Module Federation](https://www.youtube.com/watch?v=t-nchkL9yIg)
